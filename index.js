@@ -8,14 +8,13 @@ const port = 5000
 app.use(bodyParser.json());
 app.use(cors());
 
-// DB_NAME = volunteer-network
-// DB_USER = volunteer
-// DB_PASS = volunteer004
+
 const MongoClient = require('mongodb').MongoClient;
 const uri = "mongodb+srv://nisha123:nisha007@cluster0.pgiio.mongodb.net/volunteer?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true , useUnifiedTopology: true});
 client.connect(err => {
   const registeredCollection = client.db("volunteer").collection("registration");
+  const eventCollection = client.db("volunteer").collection("registration");
 
   app.post('/addNewUser', (req, res) => {
     const newRegisteredActivity = req.body;
@@ -23,6 +22,23 @@ client.connect(err => {
     .then(result => {    res.send(result.insertedCount > 0)})
     console.log(req.body)
     console.log(err);
+  })
+
+
+  app.post('/addEvent', (req, res) => {
+    const newEvent = req.body;
+    eventCollection.insertOne(newEvent)
+    .then(result => {    res.send(result.insertedCount > 0)})
+    console.log(req.body)
+    console.log(err);
+  })
+
+
+  app.get('/event', (req, res) => {
+    eventCollection.find()
+    .toArray((err, documents)=> {
+        res.send(documents);
+    })
   })
 
 app.get('/activity', (req, res) => {
@@ -38,6 +54,7 @@ app.get('/activityAll', (req, res) => {
       res.send(documents);
   })
 })
+
 
 
 });
