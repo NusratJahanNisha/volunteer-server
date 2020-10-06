@@ -55,6 +55,10 @@ app.get('/activityAll', (req, res) => {
   })
 })
 
+app.get('/', (req, res) => {
+  res.send("hello from db it's working")
+})
+
 
 
 });
